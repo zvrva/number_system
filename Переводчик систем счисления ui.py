@@ -16,13 +16,132 @@ class MyWidget(QMainWindow):
 
     def check(self, button):
         self.sign = button.text()
-        print(self.sign)
+        self.lineEdit_4.setText(self.sign)
 
     def encode(self):
-        pass
+        a = self.lineEdit.text()
+        x = int(self.spinBox.text())
+        numbers = '1234567890ABCDEF'
+        let_to_num = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}
+        true_a = False
+        n = 0
+        m = 0
+        for i in a:
+            if i in numbers:
+                n += 1
+            if i not in numbers and i != '.':
+                m += 1
+        if len(a) == 0:
+            self.lineEdit.setStyleSheet("background-color: red")
+            print('Вы ничего не ввели')
+        elif n == len(a):
+            self.lineEdit.setStyleSheet("color: black")
+            true_a = True
+        elif a[0] == '-' and n == len(a) - 1:
+            self.lineEdit.setStyleSheet("color: red")
+            print('Вы ввели отрицательное число')
+
+        elif n < len(a) and m > 0:
+            self.lineEdit.setStyleSheet("color: red")
+            print('Вы ввели не число')
+        else:
+            self.lineEdit_3.setStyleSheet("color: red")
+            print('Вы ввели нецелое число')
+
+        true_b = False
+        n = 0
+        if true_a:
+            for i in a:
+                if i in 'ABCDEF':
+                    i = let_to_num[i]
+                if int(i) < x:
+                    n += 1
+            if n == len(a):
+                true_b = True
+            else:
+                num_to_sys = {2: 'двоичной', 3: 'троичной', 4: 'четвертичной', 5: 'пятеричной',
+                              6: 'шестеричной', 7: 'семиричной', 8: 'восьмеричная', 9: 'девятеричной',
+                              10: 'десятичной', 11: 'одиннадцатеричной', 12: 'двенадцатеричной',
+                              13: 'тринадцатеричной', 14: 'четырнадцатеричной', 15: 'пятнадцатеричной',
+                              16: 'шестнадцатеричной'}
+                d = 'Вы ввели число, не принадлежащее ' + num_to_sys[x] + ' системе счисления'
+                print(d)
+
+        if true_b:
+            a = list(a)
+            a.reverse()
+            amount = 0
+            degree = 0
+            for i in a:
+                if i in 'ABCDEF':
+                    i = let_to_num[i]
+                summand = (int(i) * (x ** degree))
+                degree += 1
+                amount += summand
+            y = int(self.spinBox_2.text())
+            if y != 10:
+                num_to_let = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
+                res = []
+                while amount >= y:
+                    end = amount % y
+                    if end >= 10:
+                        end = num_to_let[end]
+                    amount //= y
+                    res.append(str(end))
+                res.append(str(amount))
+                res.reverse()
+                res = ''.join(res)
+                self.lineEdit_2.setText(res)
+            else:
+                self.lineEdit_2.setText(str(amount))
 
     def explain(self):
-        pass
+        let_to_num = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}
+        num_to_let = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
+        k = []
+        s = []
+        ss = []
+        a = self.lineEdit.text()
+        x = int(self.spinBox.text())
+        a = list(a)
+        a.reverse()
+        amount = 0
+        degree = 0
+        k.append('Переводим число в десятичную систему счисления:')
+        for i in a:
+            d = 'Возводим остнование системы счисления в степень ' + str(degree) + ' и умножаем на ' + str(i) + ':'
+            e = str(x) + '^' + str(degree) + ' * ' + str(i) + ' = ' + str((int(i) * (x ** degree)))
+            k.append(d)
+            k.append(e)
+            if i in 'ABCDEF':
+                i = let_to_num[i]
+            summand = (int(i) * (x ** degree))
+            degree += 1
+            amount += summand
+            s.append(summand)
+            ss.append(str(summand))
+        k.append('Складываем полученные числа:')
+        d = ' + '.join(ss)
+        d += ' = '
+        d += str(sum(s))
+        k.append(d)
+        for i in k:
+            print(i)
+
+        y = int(self.spinBox_2.text())
+        if y != 10:
+            num_to_let = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
+            res = []
+            while amount >= y:
+                end = amount % y
+                if end >= 10:
+                    end = num_to_let[end]
+                amount //= y
+                res.append(str(end))
+            res.append(str(amount))
+            res.reverse()
+            res = ''.join(res)
+            self.lineEdit_2.setText(res)
 
     def calculate(self):
         numbers = '1234567890'
