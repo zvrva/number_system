@@ -13,6 +13,10 @@ class MyWidget(QMainWindow):
         self.pushButton_3.clicked.connect(self.calculate)
         self.buttonGroup.buttonClicked.connect(self.check)
         self.sign = '+'
+        self.exist = []
+
+    def story(self, v):
+        self.listWidget_2.addItem(v)
 
     def check(self, button):
         self.sign = button.text()
@@ -33,20 +37,20 @@ class MyWidget(QMainWindow):
                 m += 1
         if len(a) == 0:
             self.lineEdit.setStyleSheet("background-color: red")
-            print('Вы ничего не ввели')
+            self.label_4.setText('Ничего не введено')
         elif n == len(a):
             self.lineEdit.setStyleSheet("color: black")
             true_a = True
         elif a[0] == '-' and n == len(a) - 1:
             self.lineEdit.setStyleSheet("color: red")
-            print('Вы ввели отрицательное число')
+            self.label_4.setText('Отрицательное число')
 
         elif n < len(a) and m > 0:
             self.lineEdit.setStyleSheet("color: red")
-            print('Вы ввели не число')
+            self.label_4.setText('Не число')
         else:
-            self.lineEdit_3.setStyleSheet("color: red")
-            print('Вы ввели нецелое число')
+            self.lineEdit.setStyleSheet("color: red")
+            self.label_4.setText('Нецелое число')
 
         true_b = False
         n = 0
@@ -64,8 +68,9 @@ class MyWidget(QMainWindow):
                               10: 'десятичной', 11: 'одиннадцатеричной', 12: 'двенадцатеричной',
                               13: 'тринадцатеричной', 14: 'четырнадцатеричной', 15: 'пятнадцатеричной',
                               16: 'шестнадцатеричной'}
-                d = 'Вы ввели число, не принадлежащее ' + num_to_sys[x] + ' системе счисления'
-                print(d)
+                d = 'Число не принадлежит ' + '\n' + num_to_sys[x] + ' СС'
+                self.label_4.setText(d)
+                self.lineEdit.setStyleSheet("color: red")
 
         if true_b:
             a = list(a)
@@ -144,8 +149,10 @@ class MyWidget(QMainWindow):
             self.lineEdit_2.setText(res)
 
     def calculate(self):
-        numbers = '1234567890'
         a = self.lineEdit_3.text()
+        x = int(self.spinBox_3.text())
+        numbers = '1234567890ABCDEF'
+        let_to_num = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}
         true_a = False
         n = 0
         m = 0
@@ -156,22 +163,23 @@ class MyWidget(QMainWindow):
                 m += 1
         if len(a) == 0:
             self.lineEdit_3.setStyleSheet("background-color: red")
-            print('Вы ничего не ввели')
+            self.label_6.setText('Ничего не введено')
         elif n == len(a):
-            if int(a) < 0:
-                self.lineEdit_3.setStyleSheet("color: red")
-                print('Вы ввели отриательное число')
-            else:
-                self.lineEdit_3.setStyleSheet("color: black")
-                true_a = True
+            self.lineEdit_3.setStyleSheet("color: black")
+            true_a = True
+        elif a[0] == '-' and n == len(a) - 1:
+            self.lineEdit_3.setStyleSheet("color: red")
+            self.label_6.setText('Отрицательное число')
+
         elif n < len(a) and m > 0:
             self.lineEdit_3.setStyleSheet("color: red")
-            print('Вы ввели не число')
+            self.label_6.setText('Не число')
         else:
             self.lineEdit_3.setStyleSheet("color: red")
-            print('Вы ввели нецелое число')
+            self.label_6.setText('Нецелое число')
 
         b = self.lineEdit_5.text()
+        y = int(self.spinBox_4.text())
         true_b = False
         n = 0
         m = 0
@@ -182,23 +190,58 @@ class MyWidget(QMainWindow):
                 m += 1
         if len(b) == 0:
             self.lineEdit_5.setStyleSheet("background-color: red")
-            print('Вы ничего не ввели')
+            self.label_7.setText('Ничего не введено')
         elif n == len(b):
-            if int(b) < 0:
-                self.lineEdit_5.setStyleSheet("color: red")
-                print('Вы ввели отриательное число')
-            else:
-                self.lineEdit_5.setStyleSheet("color: black")
-                true_b = True
+            self.lineEdit_5.setStyleSheet("color: black")
+            true_b = True
+        elif b[0] == '-' and n == len(b) - 1:
+            self.lineEdit_5.setStyleSheet("color: red")
+            self.label_7.setText('Отрицательное число')
         elif n < len(b) and m > 0:
             self.lineEdit_5.setStyleSheet("color: red")
-            print('Вы ввели не число')
+            self.label_7.setText('Не число')
         else:
             self.lineEdit_5.setStyleSheet("color: red")
-            print('Вы ввели нецелое число')
+            self.label_7.setText('Нецелое число')
 
-        if true_a and true_b:
-            x = int(self.spinBox_3.text())
+        true_c = False
+        true_d = False
+
+        num_to_sys = {2: 'двоичной', 3: 'троичной', 4: 'четвертичной', 5: 'пятеричной',
+                      6: 'шестеричной', 7: 'семиричной', 8: 'восьмеричная', 9: 'девятеричной',
+                      10: 'десятичной', 11: 'одиннадцатеричной', 12: 'двенадцатеричной',
+                      13: 'тринадцатеричной', 14: 'четырнадцатеричной', 15: 'пятнадцатеричной',
+                      16: 'шестнадцатеричной'}
+        n = 0
+        if true_a:
+            for i in a:
+                if i in 'ABCDEF':
+                    i = let_to_num[i]
+                if int(i) < x:
+                    n += 1
+            if n == len(a):
+                true_c = True
+            else:
+                d = 'Число не принадлежит ' + '\n' + num_to_sys[x] + ' СС'
+                print(d)
+                self.lineEdit_3.setStyleSheet("color: red")
+                self.label_6.setText(d)
+        n = 0
+        if true_b:
+            for i in b:
+                if i in 'ABCDEF':
+                    i = let_to_num[i]
+                if int(i) < x:
+                    n += 1
+            if n == len(b):
+                true_d = True
+            else:
+                d = 'Число не принадлежит ' + '\n' + num_to_sys[x] + ' СС'
+                print(d)
+                self.lineEdit_5.setStyleSheet("color: red")
+                self.label_7.setText(d)
+
+        if true_c and true_d:
             a = list(a)
             a.reverse()
             degree = 0
@@ -207,7 +250,6 @@ class MyWidget(QMainWindow):
                 summand = int(i) * (x ** degree)
                 amount_a += summand
                 degree += 1
-            y = int(self.spinBox_4.text())
             b = list(b)
             b.reverse()
             degree = 0
@@ -226,11 +268,15 @@ class MyWidget(QMainWindow):
                 if amount_b != 0:
                     value = amount_a / amount_b
                     value = round(value)
-                    print('Делитель не может быть равен 0')
+                    self.label_7.setText('Нельзя делить на 0')
                 else:
                     self.lineEdit_5.setStyleSheet("color: red")
                     value = 'error'
             self.lineEdit_6.setText(str(value))
+            v = ''.join(a) + '(' + str(x) + ') ' + self.sign + ' ' + ''.join(b) + '(' + str(y) + ') = ' + str(value)
+            if v not in self.exist:
+                self.story(v)
+                self.exist.append(v)
 
 
 if __name__ == '__main__':
