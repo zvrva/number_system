@@ -14,6 +14,15 @@ class MyWidget(QMainWindow):
         self.buttonGroup.buttonClicked.connect(self.check)
         self.sign = '+'
         self.exist = []
+        self.listWidget_2.itemActivated.connect(self.itemActivated_event)
+
+    def itemActivated_event(self, item):
+        a = item.text()
+        self.listWidget_2.clear()
+        for i in self.exist:
+            if i != a:
+                self.listWidget_2.addItem(i)
+        self.exist.remove(a)
 
     def story(self, v):
         self.listWidget_2.addItem(v)
@@ -101,52 +110,71 @@ class MyWidget(QMainWindow):
                 self.lineEdit_2.setText(str(amount))
 
     def explain(self):
-        let_to_num = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}
-        num_to_let = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
-        k = []
-        s = []
-        ss = []
-        a = self.lineEdit.text()
+        self.listWidget.clear()
         x = int(self.spinBox.text())
-        a = list(a)
-        a.reverse()
-        amount = 0
-        degree = 0
-        k.append('Переводим число в десятичную систему счисления:')
-        for i in a:
-            d = 'Возводим остнование системы счисления в степень ' + str(degree) + ' и умножаем на ' + str(i) + ':'
-            e = str(x) + '^' + str(degree) + ' * ' + str(i) + ' = ' + str((int(i) * (x ** degree)))
-            k.append(d)
-            k.append(e)
-            if i in 'ABCDEF':
-                i = let_to_num[i]
-            summand = (int(i) * (x ** degree))
-            degree += 1
-            amount += summand
-            s.append(summand)
-            ss.append(str(summand))
-        k.append('Складываем полученные числа:')
-        d = ' + '.join(ss)
-        d += ' = '
-        d += str(sum(s))
-        k.append(d)
-        for i in k:
-            print(i)
-
         y = int(self.spinBox_2.text())
-        if y != 10:
+        if x == y:
+            self.listWidget.addItem('Основания систем счисления равны')
+        else:
+            let_to_num = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}
             num_to_let = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
-            res = []
-            while amount >= y:
-                end = amount % y
-                if end >= 10:
-                    end = num_to_let[end]
-                amount //= y
-                res.append(str(end))
-            res.append(str(amount))
-            res.reverse()
-            res = ''.join(res)
-            self.lineEdit_2.setText(res)
+            explain_1 = [
+                'Для перевода числа в десятичную СС необходимо возвести основание СС в соответсвующую степень разряда и умножить на этот разряд:']
+            ss = []
+            a = self.lineEdit.text()
+            a = list(a)
+            a.reverse()
+            amount = 0
+            degree = 0
+            for i in a:
+                if i in 'ABCDEF':
+                    i = let_to_num[i]
+                summand = (int(i) * (x ** degree))
+                degree += 1
+                amount += summand
+                ss.append(str(summand))
+                e = str(x) + '^' + str(degree) + ' * ' + str(i) + ' = ' + str(summand)
+                explain_1.append(e)
+            explain_1.append('И сложить полученные числа:')
+            d = ' + '.join(ss)
+            d += ' = '
+            d += str(amount)
+            explain_1.append(d)
+
+            ostatki = []
+            explain_2 = []
+            explain_2.append(
+                'Для перевода числа из десятичной СС необходимо делить число на основание СС до тех пор, пока не останется число меньше основания СС')
+            summand = amount
+            while summand >= y:
+                ost = summand % y
+                if ost >= 10:
+                    ost = num_to_let[ost]
+                summand //= y
+                ostatki.append(str(ost))
+                e = str(summand) + ' % ' + str(y) + ' = ' + str(ost)
+                explain_2.append(e)
+            if summand >= 10:
+                summand = num_to_let[summand]
+            e = 'Добавим результат деления ' + str(summand)
+            explain_2.append(e)
+            ostatki.append(str(summand))
+            explain_2.append('Запишем получившееся число в обратном порядке:')
+            p = ''.join(ostatki) + ' -> '
+            ostatki.reverse()
+            p += ''.join(ostatki)
+            explain_2.append(p)
+            if y == 10 and x != 10:
+                for i in explain_1:
+                    self.listWidget.addItem(i)
+            elif y != 10 and x == 10:
+                for i in explain_2:
+                    self.listWidget.addItem(i)
+            elif x != 10 and y != 10:
+                for i in explain_1:
+                    self.listWidget.addItem(i)
+                for i in explain_2:
+                    self.listWidget.addItem(i)
 
     def calculate(self):
         a = self.lineEdit_3.text()
